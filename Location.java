@@ -1,7 +1,7 @@
-
+package simplejson;
 public class Location {
-double lat;
-double lon;
+private double lat;
+private double lon;
 Location(double lat,double lon){
 	this.lat=lat;
 	this.lon=lon;

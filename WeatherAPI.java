@@ -1,3 +1,4 @@
+package simplejson;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,7 +14,7 @@ import org.json.JSONObject;
 /**
  * This class demos how to make an API call, parse the JSON response and uses the response
  * values to create an ArrayList of RecipePuppyRecipe objects.
- * @author yilinsun
+ * @author yilinsun, GJY
  *
  */
 public class WeatherAPI {
@@ -40,9 +41,10 @@ public class WeatherAPI {
 			String mainWeather=jArray1.getJSONObject(0).getString("main");
 			double tempMin=jObj.getJSONObject("main").getDouble("temp_min");
 			double tempMax=jObj.getJSONObject("main").getDouble("temp_max");
-		
+		    double pressure=jObj.getJSONObject("main").getDouble("pressure");
+		    int humid=jObj.getJSONObject("main").getInt("humidity");
 			String city=jObj.getString("name");
-			WeatherInfo rpr = new WeatherInfo(city,tempMin,tempMax,mainWeather);
+			WeatherInfo rpr = new WeatherInfo(city,tempMin,tempMax,mainWeather,pressure, humid);
 			weatherArray.add(rpr);
 		
 		return weatherArray;
@@ -90,19 +92,21 @@ public class WeatherAPI {
 		String weatherUrl =endPoint+url2+latNum+lon+lonNum+key;
 		
 		WeatherAPI recipePuppy = new WeatherAPI();
-		ArrayList<WeatherInfo> rpRecipes = new ArrayList<>();
+		ArrayList<WeatherInfo> weatherInfos = new ArrayList<>();
 		
 		try {
 			//make the API call and get a String response
 			String jsonResponse = recipePuppy.makeAPICall(weatherUrl);
 			//parse the response and get an ArrayList of RecipePuppyRecipe objects
-			rpRecipes = recipePuppy.parseWeatherJSON(jsonResponse);
+			weatherInfos = recipePuppy.parseWeatherJSON(jsonResponse);
 			//view the results in a proper Java object
-			for(WeatherInfo rpr: rpRecipes) {
-				System.out.println(rpr.getCity());
-				System.out.println(rpr.getMainWeather());
-				System.out.println(rpr.getTemMax());
-				System.out.println(rpr.getTemMin());
+			for(WeatherInfo wInfo: weatherInfos) {
+				System.out.println("city name = "+wInfo.getCity());
+				System.out.println("main weather = "+wInfo.getMainWeather());
+				System.out.println("temp max = "+wInfo.getTemMax());
+				System.out.println("temp min = "+wInfo.getTemMin());
+				System.out.println("humidity = "+wInfo.getHumid());
+				System.out.println("pressure = "+wInfo.getPressure());
 				
 			}
 		} catch (IOException e) {

@@ -1,14 +1,20 @@
+package simplejson;
 
 public class WeatherInfo {
-double temMin;
-String city;
-double temMax;
-String mainWeather;
-public WeatherInfo(String city,double temMin,double temMax,String mainWeather) {
+private double temMin;
+private String city;
+private double temMax;
+private String mainWeather;
+private int humid;
+private double pressure;
+
+public WeatherInfo(String city,double temMin,double temMax,String mainWeather, double pressure, int humid) {
 	this.temMin=temMin;
 	this.city=city;
 	this.temMax=temMax;
 	this.mainWeather=mainWeather;
+	this.pressure=pressure;
+	this.humid=humid;
 	
 }
 
@@ -26,6 +32,14 @@ public String getCity() {
 
 public String getMainWeather() {
 	return mainWeather;
+}
+
+public double getHumid() {
+	return humid;
+}
+
+public double getPressure() {
+	return pressure;
 }
 
 
