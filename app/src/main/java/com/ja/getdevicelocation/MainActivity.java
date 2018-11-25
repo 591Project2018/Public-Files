@@ -1,5 +1,6 @@
 package com.ja.getdevicelocation;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, ACCESS_FINE_LOCATION)  != PackageManager.PERMISSION_GRANTED) {
 
                     return;
@@ -99,9 +102,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             WeatherAPI weatherAPI=new WeatherAPI();
-            mainWeather.setText(weatherAPI.getWgeo(textResult).getMainWeather());
-            city.setText(weatherAPI.getWgeo(textResult).getCity());
-            pressure.setText(String.valueOf(weatherAPI.getWgeo(textResult).getPressure()));
+            Intent intent=new Intent(MainActivity.this, WeatherDisplay.class);
+            intent.putExtra("mainWeather",weatherAPI.getWgeo(textResult).getMainWeather());
+            intent.putExtra("city",weatherAPI.getWgeo(textResult).getCity());
+            intent.putExtra("pressure",String.valueOf(weatherAPI.getWgeo(textResult).getPressure()));
+            startActivity(intent);
+            //mainWeather.setText(weatherAPI.getWgeo(textResult).getMainWeather());
+            //city.setText(weatherAPI.getWgeo(textResult).getCity());
+            //pressure.setText(String.valueOf(weatherAPI.getWgeo(textResult).getPressure()));
             super.onPostExecute(aVoid);
         }
     }
