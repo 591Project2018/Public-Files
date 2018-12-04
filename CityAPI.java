@@ -72,6 +72,27 @@ public class CityAPI {
         }
         return w;
     }
+    public String makeAPICall(URL url) throws IOException {
+
+        URLConnection yc;
+        BufferedReader in;
 
 
+        yc = url.openConnection();
+        in = new BufferedReader(new InputStreamReader(
+                yc.getInputStream()));
+        String inputLine;
+
+        //Why StringBuffer? - StringBuffer is mutable so we can append to it
+        StringBuffer response = new StringBuffer();
+        //BufferedReader does not have a "hasNext" type method so this is how to check for
+        //more input
+        //if it has more input append to the StringBuffer
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        return response.toString();
+    }
 }
