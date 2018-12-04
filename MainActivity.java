@@ -188,6 +188,9 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("city",cityAPI.getCityWeather(response[0]).getCity());
             intent.putExtra("pressure",String.valueOf(cityAPI.getCityWeather(response[0]).getPressure()));
             intent.putExtra("temp",String.valueOf(cityAPI.getCityWeather(response[0]).getTemMax()));
+            intent.putExtra("temp",String.valueOf(res.get(1).getTemMax()));
+            intent.putExtra("fore_temp",""+res.get(1).getTemMax() );
+            startActivity(intent);
         }
     }
 
