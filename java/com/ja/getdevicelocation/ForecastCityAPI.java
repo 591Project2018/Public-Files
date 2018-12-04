@@ -1,14 +1,12 @@
 package com.ja.getdevicelocation;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -25,36 +23,42 @@ import org.json.JSONObject;
  * @author Scarlett Yu
  *
  */
-public class ForecastAPI {
+public class ForecastCityAPI {
 	final double TEMP_CONVERT = 273.15;
+
 	/**
 	 * Parse the JSON response String
+	 *
 	 * @param jsonResponse
 	 * @return ArrayList of RecipePuppyRecipe objects
 	 * @throws JSONException
 	 */
-	public List<DailyWeather> parseWeatherJSON(String jsonResponse) throws JSONException {
+	public ArrayList<DailyWeather> parseWeatherJSON(String jsonResponse) throws JSONException {
 		//create a JSON object with the String response
 		JSONObject jObj = new JSONObject(jsonResponse);
+		//Look at the raw String response
+		//Look for the results key
+		//After the colon there is a square bracket indicating a JSONArray
 		JSONArray jArray1 = jObj.getJSONArray("list");
-		String city=jObj.getJSONObject("city").getString("name");
-		ArrayList<DailyWeather> dWeatherArray = new ArrayList<DailyWeather>();
 
-		for(int i=0;i<jArray1.length();i++) {
+		String city = jObj.getJSONObject("city").getString("name");
 
-			JSONObject ob=jArray1.getJSONObject(i);
+		ArrayList<DailyWeather> dWeatherArray0 = new ArrayList<DailyWeather>();
 
-			JSONArray weather=ob.getJSONArray("weather");
-			String descript=weather.getJSONObject(0).getString("main");
+
+		for (int i = 0; i < jArray1.length(); i++) {
+
+			JSONObject ob = jArray1.getJSONObject(i);
+
+			JSONArray weather = ob.getJSONArray("weather");
+			String descript = weather.getJSONObject(0).getString("description");
 			//System.out.println(descript);
 
 			JSONObject obMain = ob.getJSONObject("main");
-			double tempMin = obMain.getDouble("temp_min")- TEMP_CONVERT;
-			tempMin=(double)(Math.round(tempMin*100)/100.0);
+			double tempMin = obMain.getDouble("temp_min") - TEMP_CONVERT;
+			System.out.println(tempMin);
 
-
-			double tempMax = obMain.getDouble("temp_max")- TEMP_CONVERT;
-			tempMax=(double)(Math.round(tempMax*100)/100.0);
+			double tempMax = obMain.getDouble("temp_max") - TEMP_CONVERT;
 			//System.out.println(tempMax);
 
 			double pressure = obMain.getDouble("pressure");
@@ -64,35 +68,32 @@ public class ForecastAPI {
 			//System.out.println(humidity);
 
 			String time = ob.getString("dt_txt");
+			String[] times = time.split(" ");
+			String[] hour = times[1].split(":");
 
-			String[]times=time.split(" ");
-			String[]hour=times[1].split(":");
 
+			if (hour[0].equals("00") || hour[0].equals("15")) {
 
-			if(hour[0].equals("00")||hour[0].equals("15")){
-
-			DailyWeather dWeather = new DailyWeather(city,tempMin,tempMax,descript,pressure,humidity);
-			dWeatherArray.add(dWeather);}
+				DailyWeather dWeather = new DailyWeather(city, tempMin, tempMax, descript, pressure, humidity);
+				dWeatherArray0.add(dWeather);
+			}
 		}
-
-
-
-
-		return dWeatherArray;
-	}
-
+			return dWeatherArray0;
+		}
 
 
 	/**
 	 * Makes the API call and returns the JSON result as a String
+	 *
 	 * @param url
 	 * @return
 	 * @throws IOException
 	 */
 	public String makeAPICall(URL url) throws IOException {
-
+		URL recipeWeather;
 		URLConnection yc;
 		BufferedReader in;
+
 
 		yc = url.openConnection();
 		in = new BufferedReader(new InputStreamReader(
@@ -112,25 +113,24 @@ public class ForecastAPI {
 		return response.toString();
 	}
 
-	public String createURL(Double latNum, Double lonNum){
-		String endPoint="https://api.openweathermap.org";
-		String url2="/data/2.5/forecast?lat=";
-		String lon="&lon=";
-		String key="&appid=93878e3b8fc1c0224d9e17f353cf474f";
-		String weatherUrl =endPoint+url2+latNum+lon+lonNum+key;
-		return  weatherUrl;
-	}
-	public List<DailyWeather> getGeoForecast(String response) {
 
-		ForecastAPI forecastAPI=new ForecastAPI();
-		List<DailyWeather> forecast=new ArrayList<>();
+	public String createURL(String cityName) {
+		String endPoint = "https://api.openweathermap.org";
+		String url2 = "/data/2.5/forecast?q=";
+		String key = "&appid=93878e3b8fc1c0224d9e17f353cf474f";
+		String weatherUrl = endPoint + url2 + cityName + key;
+		return weatherUrl;
+	}
+
+	public List<DailyWeather> getCityForecast(String response) {
+
+		ForecastAPI forecastAPI = new ForecastAPI();
+		List<DailyWeather> forecast = new ArrayList<>();
 		try {
-			forecast= forecastAPI.parseWeatherJSON(response);
+			forecast = forecastAPI.parseWeatherJSON(response);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		return forecast;
 	}
-
 }
-
