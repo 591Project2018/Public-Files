@@ -1,5 +1,4 @@
 package com.ja.getdevicelocation;
-import android.os.AsyncTask;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,7 +6,11 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,19 +19,22 @@ import org.json.JSONObject;
 /**
  * This class demos how to make an API call, parse the JSON response and uses the response
  * values to create an ArrayList of RecipePuppyRecipe objects.
- * @author yilinsun, GJY
+ * @author Scarlett Yu
  *
  */
-public class WeatherAPI {
-    final double TEMP_CONVERT = 273.15;
-    private Exception exception;
+public class CityAPI {
+
     /**
      * Parse the JSON response String
+     *
      * @param jsonResponse
      * @return ArrayList of RecipePuppyRecipe objects
      * @throws JSONException
      */
-    public WeatherInfo parseWeatherJSON(String jsonResponse) throws JSONException {
+
+    public static final double TEMP_CONVERT = 273.15;
+
+    public WeatherInfo parseCityWeatherJSON(String jsonResponse) throws JSONException {
         //create a JSON object with the String response
         JSONObject jObj = new JSONObject(jsonResponse);
         //Look at the raw String response
@@ -46,26 +52,26 @@ public class WeatherAPI {
         return wgeo;
     }
 
-    public String createURL(double latNum, double lonNum){
+
+
+    public String createURL(String cityName){
         String endPoint = "https://api.openweathermap.org";
-        String url2 = "/data/2.5/weather?lat=";
-        String lon = "&lon=";
+        String url2 = "/data/2.5/weather?q=";
         String key = "&appid=93878e3b8fc1c0224d9e17f353cf474f";
-        String weatherUrl = endPoint + url2 + latNum + lon + lonNum + key;
+        String weatherUrl = endPoint + url2 + cityName + key;
         return  weatherUrl;
     }
-    public WeatherInfo getWgeo(String response) {
+    public WeatherInfo getCityWeather(String response) {
 
-        WeatherAPI weatherAPI = new WeatherAPI();
-        WeatherInfo wgeo=new WeatherInfo("",0.0,0.0,"",0.0,0);
+        CityAPI cityAPI = new CityAPI();
+        WeatherInfo w=new WeatherInfo("",0.0,0.0,"",0.0,0);
         try {
-            wgeo = weatherAPI.parseWeatherJSON(response);
+            w= cityAPI.parseCityWeatherJSON(response);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return wgeo;
+        return w;
     }
-
     public String makeAPICall(URL url) throws IOException {
 
         URLConnection yc;
@@ -89,6 +95,4 @@ public class WeatherAPI {
 
         return response.toString();
     }
-
-
 }
