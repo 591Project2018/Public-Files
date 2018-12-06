@@ -6,34 +6,69 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class WeatherDisplay extends AppCompatActivity {
+public class SearchInfo extends AppCompatActivity {
     private TextView real_weather, real_pressure, location,real_temperature,real_humid,real_tempMax,real_tempMin, real_Weather2,real_Weather3,real_Weather4,real_Weather5,real_Weather6;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_weather_display);
-        Intent intent=getIntent();
-        String city=intent.getStringExtra("city");
-        String pressure=intent.getStringExtra("pressure");
-        String mainWeather=intent.getStringExtra("mainWeather");
-        String mainWeather2=intent.getStringExtra("mainWeather2Image");
-        String mainWeather2Info=intent.getStringExtra("mainWeather2");
-        String mainWeather3=intent.getStringExtra("mainWeather3Image");
-        String mainWeather3Info=intent.getStringExtra("mainWeather3");
-        String mainWeather4=intent.getStringExtra("mainWeather4Image");
-        String mainWeather4Info=intent.getStringExtra("mainWeather4");
-        String mainWeather5=intent.getStringExtra("mainWeather5Image");
-        String mainWeather5Info=intent.getStringExtra("mainWeather5");
-        //String mainWeather6=intent.getStringExtra("mainWeather6Image");
-        //String mainWeather6Info=intent.getStringExtra("mainWeather6");
+        setContentView(R.layout.activity_search_info);
+        Intent intent = getIntent();
+        String city=intent.getStringExtra("search_city");
+        String pressure=intent.getStringExtra("search_pressure");
+        String mainWeather=intent.getStringExtra("search_mainWeather");
 
-        ImageView view=findViewById(R.id.WeatherImage);
+        String mainWeather2=intent.getStringExtra("search_mainWeather2Image");
+        String mainWeather2Info=intent.getStringExtra("search_mainWeather2");
+        String mainWeather3=intent.getStringExtra("search_mainWeather3Image");
+        String mainWeather3Info=intent.getStringExtra("search_mainWeather3");
+        String mainWeather4=intent.getStringExtra("search_mainWeather4Image");
+        String mainWeather4Info=intent.getStringExtra("search_mainWeather4");
+        String mainWeather5=intent.getStringExtra("search_mainWeather5Image");
+        String mainWeather5Info=intent.getStringExtra("search_mainWeather5");
+       // String mainWeather6=intent.getStringExtra("search_mainWeather6Image");
+        //String mainWeather6Info=intent.getStringExtra("search_mainWeather6");
+
+        String temperature=intent.getStringExtra("search_temperature");
+        String tempMax=intent.getStringExtra("search_tempMax");
+        String tempMin=intent.getStringExtra("search_tempMin");
+        String humid=intent.getStringExtra("search_humid");
+        location=findViewById(R.id.search_location);
+        real_weather=findViewById(R.id.search_weather);
+        real_pressure=findViewById(R.id.search_pressure);
+        real_temperature=findViewById(R.id.search_temp);
+        real_tempMax=findViewById(R.id.search_tempMax);
+        real_tempMin=findViewById(R.id.search_tempMin);
+        real_humid=findViewById(R.id.search_humid);
+        real_Weather2 =findViewById(R.id.search_tomInfo);
+        real_Weather3 =findViewById(R.id.search_thirdInfo);
+        real_Weather4 =findViewById(R.id.search_fourthInfo);
+        real_Weather5 =findViewById(R.id.search_fifthInfo);
+        //real_Weather6 =findViewById(R.id.search_sixthInfo);
+        location.setText(city);
+        real_weather.setText(mainWeather);
+        real_pressure.setText(pressure);
+        real_temperature.setText(temperature);
+        real_humid.setText(humid);
+        real_tempMax.setText(tempMax);
+        real_tempMin.setText(tempMin);
+
+        real_Weather2.setText(mainWeather2Info);
+        real_Weather3.setText(mainWeather3Info);
+        real_Weather4.setText(mainWeather4Info);
+        real_Weather5.setText(mainWeather5Info);
+       // real_Weather6.setText(mainWeather6Info);
+
+
+
+        ImageView view=findViewById(R.id.search_WeatherImage);
 
         if(mainWeather.contains("Rain")) {
             view.setImageResource(R.drawable.rainy);
@@ -65,7 +100,7 @@ public class WeatherDisplay extends AppCompatActivity {
             view.setImageResource(R.drawable.sunny);
         }
 
-        ImageView view1=findViewById(R.id.tommImage);
+        ImageView view1=findViewById(R.id.search_tommImage);
 
         if(mainWeather2.contains("Rain")) {
             view1.setImageResource(R.drawable.rainy);
@@ -97,7 +132,7 @@ public class WeatherDisplay extends AppCompatActivity {
             view1.setImageResource(R.drawable.sunny);
         }
 
-        ImageView view2=findViewById(R.id.thirdImage);
+        ImageView view2=findViewById(R.id.search_thirdImage);
 
         if(mainWeather3.contains("Rain")) {
             view2.setImageResource(R.drawable.rainy);
@@ -129,7 +164,7 @@ public class WeatherDisplay extends AppCompatActivity {
             view2.setImageResource(R.drawable.sunny);
         }
 
-        ImageView view3=findViewById(R.id.fourthImage);
+        ImageView view3=findViewById(R.id.search_fourthImage);
 
         if(mainWeather4.contains("Rain")) {
             view3.setImageResource(R.drawable.rainy);
@@ -161,7 +196,7 @@ public class WeatherDisplay extends AppCompatActivity {
             view3.setImageResource(R.drawable.sunny);
         }
 
-        ImageView view4=findViewById(R.id.fifthImage);
+        ImageView view4=findViewById(R.id.search_fifthImage);
 
         if(mainWeather5.contains("Rain")) {
             view4.setImageResource(R.drawable.rainy);
@@ -200,84 +235,49 @@ public class WeatherDisplay extends AppCompatActivity {
         calendar.add(calendar.DATE,1);
         Date tomorrow1=calendar.getTime();
         String nowAsString=new SimpleDateFormat("yyyy-MM-dd" ).format(now);
-        TextView day=findViewById(R.id.Day);
+        TextView day=findViewById(R.id.search_Day);
         day.setText(nowAsString);
         String tomAsString=new SimpleDateFormat("MM-dd").format(tomorrow1);
-        TextView tomorrow=findViewById(R.id.tomorrow);
+        TextView tomorrow=findViewById(R.id.search_tomorrow);
         tomorrow.setText(tomAsString);
 
         calendar.add(calendar.DATE,1);
         Date tom2=calendar.getTime();
         String thirdAsString=new SimpleDateFormat("MM-dd").format(tom2);
-        TextView third=findViewById(R.id.third);
+        TextView third=findViewById(R.id.search_third);
         third.setText(thirdAsString);
 
         calendar.add(calendar.DATE,1);
         Date tom3=calendar.getTime();
         String fourthAsString=new SimpleDateFormat("MM-dd").format(tom3);
-        TextView fourth=findViewById(R.id.fourth);
+        TextView fourth=findViewById(R.id.search_fourth);
         fourth.setText(fourthAsString);
 
         calendar.add(calendar.DATE,1);
         Date tom4=calendar.getTime();
         String fifthAsString=new SimpleDateFormat("MM-dd").format(tom4);
-        TextView fifth=findViewById(R.id.fifth);
+        TextView fifth=findViewById(R.id.search_fifth);
         fifth.setText(fifthAsString);
 
-        //calendar.add(calendar.DATE,1);
-        //Date tom5=calendar.getTime();
-        //String sixthAsString=new SimpleDateFormat("MM-dd").format(tom5);
-        //TextView sixth=findViewById(R.id.sixth);
-        //sixth.setText(sixthAsString);
-
-        String temperature=intent.getStringExtra("temperature");
-        String tempMax=intent.getStringExtra("tempMax");
-        String tempMin=intent.getStringExtra("tempMin");
-        String humid=intent.getStringExtra("humid");
-        location=findViewById(R.id.location);
-        real_weather=findViewById(R.id.weather);
-        real_pressure=findViewById(R.id.pressure);
-        real_temperature=findViewById(R.id.temperature);
-        real_tempMax=findViewById(R.id.tempMax);
-        real_tempMin=findViewById(R.id.tempMin);
-        real_humid=findViewById(R.id.humid);
-        real_Weather2 =findViewById(R.id.tomInfo);
-        real_Weather3 =findViewById(R.id.thirdInfo);
-        real_Weather4 =findViewById(R.id.fourthInfo);
-        real_Weather5 =findViewById(R.id.fifthInfo);
-        //real_Weather6 =findViewById(R.id.sixthInfo);
-        location.setText(city);
-        real_weather.setText(mainWeather);
-        real_pressure.setText(pressure);
-        real_temperature.setText(temperature);
-        real_humid.setText(humid);
-        real_tempMax.setText(tempMax);
-        real_tempMin.setText(tempMin);
-
-        real_Weather2.setText(mainWeather2Info);
-        real_Weather3.setText(mainWeather3Info);
-        real_Weather4.setText(mainWeather4Info);
-        real_Weather5.setText(mainWeather5Info);
-        //real_Weather6.setText(mainWeather6Info);
 
 
-        location.setOnTouchListener(new OnSwipeTouchListener(WeatherDisplay.this) {
+        location.setOnTouchListener(new OnSwipeTouchListener(SearchInfo.this) {
             public void onSwipeTop() {
-                Toast.makeText(WeatherDisplay.this, "top", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SearchInfo.this, "top", Toast.LENGTH_SHORT).show();
             }
             public void onSwipeRight() {
-                Intent intent1=new Intent(WeatherDisplay.this,TestSwipe.class);
+                Intent intent1=new Intent(SearchInfo.this,TestSwipe.class);
                 startActivity(intent1);
             }
             public void onSwipeLeft() {
-                Toast.makeText(WeatherDisplay.this, "left", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SearchInfo.this, "left", Toast.LENGTH_SHORT).show();
             }
             public void onSwipeBottom() {
-                Toast.makeText(WeatherDisplay.this, "bottom", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SearchInfo.this, "bottom", Toast.LENGTH_SHORT).show();
             }
 
         });
 
-
     }
+
 }
