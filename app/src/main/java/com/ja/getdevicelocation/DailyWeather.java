@@ -2,6 +2,7 @@ package com.ja.getdevicelocation;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * This class creates an DailyWeather Object with city name
@@ -17,6 +18,7 @@ public class DailyWeather {
 	private String discript;
 	private double humid;
 	private double pressure;
+	private Calendar cal;
 
 	/**
 	 * COnstructor for DailyWeather object
@@ -27,14 +29,18 @@ public class DailyWeather {
 	 * @param discript
 	 * @param pressure
 	 * @param humid
+	 * @param cal
 	 */
-	public DailyWeather(String city, double temMin, double temMax, String discript, double pressure, double humid) {
+	public DailyWeather(String city, double temMin, double temMax, String discript, double pressure, double humid,
+			Calendar cal) {
 		this.temMin = temMin;
 		this.city = city;
 		this.temMax = temMax;
 		this.discript = discript;
 		this.pressure = pressure;
 		this.humid = humid;
+		this.cal = cal;
+
 	}
 
 	/**
@@ -91,4 +97,21 @@ public class DailyWeather {
 		return pressure;
 	}
 
+	/**
+	 * getter method
+	 * 
+	 * @return cal
+	 */
+	public Calendar getCal() {
+		return cal;
+	}
+
+	/**
+	 * setter method
+	 * 
+	 * @param cal
+	 */
+	public void setCal(Calendar cal) {
+		this.cal = cal;
+	}
 }

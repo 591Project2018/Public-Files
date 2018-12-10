@@ -1,14 +1,18 @@
 package com.ja.getdevicelocation;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -28,22 +32,23 @@ public class ForecastCityAPI {
 
 	/**
 	 * Parse the JSON response String
-	 * 
+	 *
 	 * @param jsonResponse
 	 * @return ArrayList of DailyWeather objects
 	 * @throws JSONException
 	 */
-	public ArrayList<DailyWeather> parseWeatherJSON(String jsonResponse) throws JSONException {
-		// create a JSON object with the String response
+	public List<DailyWeather> parseWeatherJSON(String jsonResponse) throws JSONException {
+		//create a JSON object with the String response
 		JSONObject jObj = new JSONObject(jsonResponse);
-		// Look at the raw String response
-		// Look for the results key
-		// After the colon there is a square bracket indicating a JSONArray
+		//Look at the raw String response
+		//Look for the results key
+		//After the colon there is a square bracket indicating a JSONArray
 		JSONArray jArray1 = jObj.getJSONArray("list");
 
 		String city = jObj.getJSONObject("city").getString("name");
 
-		ArrayList<DailyWeather> dWeatherArray0 = new ArrayList<DailyWeather>();
+		ArrayList<DailyWeather> dWeatherArray= new ArrayList<DailyWeather>();
+
 
 		for (int i = 0; i < jArray1.length(); i++) {
 
@@ -51,32 +56,51 @@ public class ForecastCityAPI {
 
 			JSONArray weather = ob.getJSONArray("weather");
 			String descript = weather.getJSONObject(0).getString("description");
-			// System.out.println(descript);
+
 
 			JSONObject obMain = ob.getJSONObject("main");
 			double tempMin = obMain.getDouble("temp_min") - TEMP_CONVERT;
-			tempMin = (double) (Math.round(tempMin * 100) / 100.0);
+			tempMin=(double)(Math.round(tempMin*100)/100.0);
 
 			double tempMax = obMain.getDouble("temp_max") - TEMP_CONVERT;
-			tempMax = (double) (Math.round(tempMax * 100) / 100.0);
+			tempMax=(double)(Math.round(tempMax*100)/100.0);
 
 			double pressure = obMain.getDouble("pressure");
-			// System.out.println(pressure);
+			//System.out.println(pressure);
 
 			double humidity = obMain.getDouble("humidity");
-			// System.out.println(humidity);
 
-			String time = ob.getString("dt_txt");
-			String[] times = time.split(" ");
-			String[] hour = times[1].split(":");
 
-			if (hour[0].equals("00") || hour[0].equals("15")) {
+			String date = ob.getString("dt_txt");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Calendar cal = Calendar.getInstance();
 
-				DailyWeather dWeather = new DailyWeather(city, tempMin, tempMax, descript, pressure, humidity);
-				dWeatherArray0.add(dWeather);
+
+			try {
+				cal.setTime(sdf.parse(date));               // parse input
+
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+
+			DailyWeather dWeather = new DailyWeather(city,tempMin,tempMax,descript,pressure,humidity, cal);
+			dWeatherArray.add(dWeather);
+		}
+
+		List<DailyWeather> res=arrayProcess(dWeatherArray);
+
+		return res;
+	}
+
+	private List<DailyWeather> arrayProcess(List<DailyWeather> dailyWeathers){
+		int today=dailyWeathers.get(0).getCal().get(Calendar.DAY_OF_MONTH);
+		List<DailyWeather> res=new ArrayList<>();
+		for(DailyWeather day:dailyWeathers){
+			if(day.getCal().get(Calendar.DAY_OF_MONTH)>today && day.getCal().get(Calendar.HOUR_OF_DAY)==0){
+				res.add(day);
 			}
 		}
-		return dWeatherArray0;
+		return res;
 	}
 
 	/**
@@ -91,16 +115,17 @@ public class ForecastCityAPI {
 		URLConnection yc;
 		BufferedReader in;
 
+
 		yc = url.openConnection();
-		in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
+		in = new BufferedReader(new InputStreamReader(
+				yc.getInputStream()));
 		String inputLine;
 
-		// Why StringBuffer? - StringBuffer is mutable so we can append to it
+		//Why StringBuffer? - StringBuffer is mutable so we can append to it
 		StringBuffer response = new StringBuffer();
-		// BufferedReader does not have a "hasNext" type method so this is how to check
-		// for
-		// more input
-		// if it has more input append to the StringBuffer
+		//BufferedReader does not have a "hasNext" type method so this is how to check for
+		//more input
+		//if it has more input append to the StringBuffer
 		while ((inputLine = in.readLine()) != null) {
 			response.append(inputLine);
 		}
@@ -108,7 +133,6 @@ public class ForecastCityAPI {
 
 		return response.toString();
 	}
-
 	/**
 	 * Creates URL string
 	 * 
@@ -122,7 +146,6 @@ public class ForecastCityAPI {
 		String weatherUrl = endPoint + url2 + cityName + key;
 		return weatherUrl;
 	}
-
 	/**
 	 * Gets city forecast data
 	 * 
